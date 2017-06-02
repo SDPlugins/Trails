@@ -55,7 +55,7 @@ namespace Trails
 		{
 			UnturnedPlayer player = (UnturnedPlayer)caller;
 
-			string trails = String.Join (",", Trails.Instance.Configuration.Instance.customTrails.Select (t => t.name).ToArray ());
+			string trails = String.Join (",", Trails.Instance.Configuration.Instance.customTrails.Where (t => player.HasPermission (t.permission.ToLower ())).Select (t => t.name).ToArray ());
 
 			UnturnedChat.Say (player, Trails.Instance.Translate ("trails_list", Trails.Instance.Configuration.Instance.customTrails.Count, trails), Color.green);
 		}

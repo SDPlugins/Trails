@@ -1,0 +1,7 @@
+C:\Users\HPUSER\Documents\Rocket Work\Trails\bin\Release\Trails.dll
+C:\Users\HPUSER\Documents\Rocket Work\Trails\bin\Release\Trails.pdb
+C:\Users\HPUSER\Documents\Rocket Work\Trails\bin\Release\I18N.dll
+C:\Users\HPUSER\Documents\Rocket Work\Trails\bin\Release\I18N.West.dll
+C:\Users\HPUSER\Documents\Rocket Work\Trails\bin\Release\MySql.Data.dll
+C:\Users\HPUSER\Documents\Rocket Work\Trails\obj\Release\Trails.dll
+C:\Users\HPUSER\Documents\Rocket Work\Trails\obj\Release\Trails.pdb
