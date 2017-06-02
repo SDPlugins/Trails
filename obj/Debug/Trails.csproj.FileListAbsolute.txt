@@ -1,0 +1,8 @@
+C:\Users\HPUSER\Documents\Rocket Work\Trails\bin\Debug\Trails.dll
+C:\Users\HPUSER\Documents\Rocket Work\Trails\bin\Debug\Trails.pdb
+C:\Users\HPUSER\Documents\Rocket Work\Trails\obj\Debug\Trails.csprojResolveAssemblyReference.cache
+C:\Users\HPUSER\Documents\Rocket Work\Trails\obj\Debug\Trails.dll
+C:\Users\HPUSER\Documents\Rocket Work\Trails\obj\Debug\Trails.pdb
+C:\Users\HPUSER\Documents\Rocket Work\Trails\bin\Debug\I18N.dll
+C:\Users\HPUSER\Documents\Rocket Work\Trails\bin\Debug\I18N.West.dll
+C:\Users\HPUSER\Documents\Rocket Work\Trails\bin\Debug\MySql.Data.dll
