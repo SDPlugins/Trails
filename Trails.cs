@@ -40,7 +40,9 @@ namespace Trails
 					{ "set_trail_admin", "You set {0}'s trail to {1}"},
 					{ "set_trail_by_admin", "Your trail has been set to {0} by {1}"},
 					{ "player_not_found", "Player by the name {0} wasn't found"},
-					{ "no_force_permission", "You don't have permission to set a players trail"}
+					{ "no_force_permission", "You don't have permission to set a players trail"},
+
+					{ "no_permission_custom", "You don't have permission to set custom trails"}
 				};
 			}
 		}

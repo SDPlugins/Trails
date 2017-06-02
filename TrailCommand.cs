@@ -56,48 +56,67 @@ namespace Trails
 			UnturnedPlayer player = (UnturnedPlayer)caller;
 			if (command.Length > 0)
 			{
-				var trail = Trails.Instance.Configuration.Instance.customTrails.Where (t => t.name.ToLower ().Contains (command [0].ToLower ())).FirstOrDefault ();
-
-				if (command.Length == 2)
+				ushort id;
+				if (ushort.TryParse (command [0], out id))
 				{
-					if (player.HasPermission ("trail.player.force"))
+					if (player.HasPermission ("trail.custom"))
 					{
-						UnturnedPlayer setPlayer = UnturnedPlayer.FromName (command [1]);
-						if (setPlayer != null)
-						{
-							Trails.Instance.database.addToSQL (setPlayer, trail.id);
-							if (Trails.trails.ContainsKey (setPlayer.CSteamID))
-								Trails.trails [setPlayer.CSteamID] = trail.id;
-							else
-								Trails.trails.Add (setPlayer.CSteamID, trail.id);
-
-							UnturnedChat.Say (setPlayer, Trails.Instance.Translate ("set_trail_by_admin", trail.name, player.DisplayName), Color.green);
-							UnturnedChat.Say (player, Trails.Instance.Translate ("set_trail_admin", setPlayer.DisplayName, trail.name), Color.green);
-						}
+						Trails.Instance.database.addToSQL (player, id);
+						if (Trails.trails.ContainsKey (player.CSteamID))
+							Trails.trails [player.CSteamID] = id;
 						else
-							UnturnedChat.Say (player, Trails.Instance.Translate ("player_not_found", command [1]), Color.red);
+							Trails.trails.Add (player.CSteamID, id);
+						UnturnedChat.Say (player, Trails.Instance.Translate ("set_trail", id.ToString ()), Color.green);
 					}
 					else
-						UnturnedChat.Say (player, Trails.Instance.Translate ("no_force_permission"), Color.red);
+						UnturnedChat.Say (player, Trails.Instance.Translate ("no_permission_custom"), Color.red);
 				}
 				else
 				{
-					if (trail != null)
+
+					var trail = Trails.Instance.Configuration.Instance.customTrails.Where (t => t.name.ToLower ().Contains (command [0].ToLower ())).FirstOrDefault ();
+
+					if (command.Length == 2)
 					{
-						if (player.HasPermission (trail.permission.ToLower ()))
+						if (player.HasPermission ("trail.player.force"))
 						{
-							Trails.Instance.database.addToSQL (player, trail.id);
-							if (Trails.trails.ContainsKey (player.CSteamID))
-								Trails.trails [player.CSteamID] = trail.id;
+							UnturnedPlayer setPlayer = UnturnedPlayer.FromName (command [1]);
+							if (setPlayer != null)
+							{
+								Trails.Instance.database.addToSQL (setPlayer, trail.id);
+								if (Trails.trails.ContainsKey (setPlayer.CSteamID))
+									Trails.trails [setPlayer.CSteamID] = trail.id;
+								else
+									Trails.trails.Add (setPlayer.CSteamID, trail.id);
+
+								UnturnedChat.Say (setPlayer, Trails.Instance.Translate ("set_trail_by_admin", trail.name, player.DisplayName), Color.green);
+								UnturnedChat.Say (player, Trails.Instance.Translate ("set_trail_admin", setPlayer.DisplayName, trail.name), Color.green);
+							}
 							else
-								Trails.trails.Add (player.CSteamID, trail.id);
-							UnturnedChat.Say (player, Trails.Instance.Translate ("set_trail", trail.name), Color.green);
+								UnturnedChat.Say (player, Trails.Instance.Translate ("player_not_found", command [1]), Color.red);
 						}
 						else
-							UnturnedChat.Say (player, Trails.Instance.Translate ("no_permission", trail.name), Color.red);
+							UnturnedChat.Say (player, Trails.Instance.Translate ("no_force_permission"), Color.red);
 					}
 					else
-						UnturnedChat.Say (player, Trails.Instance.Translate ("trail_not_found", command [0]), Color.red);
+					{
+						if (trail != null)
+						{
+							if (player.HasPermission (trail.permission.ToLower ()))
+							{
+								Trails.Instance.database.addToSQL (player, trail.id);
+								if (Trails.trails.ContainsKey (player.CSteamID))
+									Trails.trails [player.CSteamID] = trail.id;
+								else
+									Trails.trails.Add (player.CSteamID, trail.id);
+								UnturnedChat.Say (player, Trails.Instance.Translate ("set_trail", trail.name), Color.green);
+							}
+							else
+								UnturnedChat.Say (player, Trails.Instance.Translate ("no_permission", trail.name), Color.red);
+						}
+						else
+							UnturnedChat.Say (player, Trails.Instance.Translate ("trail_not_found", command [0]), Color.red);
+					}
 				}
 			}
 			else
