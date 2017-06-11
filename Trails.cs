@@ -120,6 +120,8 @@ namespace Trails
 						case "equipedgun":
 							if (player.Player.equipment.asset == null)
 								return;
+							if (show.Split ('.').Contains ("*"))
+								break;
 							ushort [] guns = show.Split ('.').Select (g => ushort.Parse (g)).ToArray ();
 							if (!guns.Contains (player.Player.equipment.asset.id))
 								return;
@@ -151,6 +153,8 @@ namespace Trails
 						case "invehicle":
 							if (!player.IsInVehicle)
 								return;
+							if (show.Split ('.').Contains ("*"))
+								break;
 							ushort [] vehicles = show.Split ('.').Select (v => ushort.Parse (v)).ToArray ();
 							if (!vehicles.Contains (player.CurrentVehicle.id))
 								return;
