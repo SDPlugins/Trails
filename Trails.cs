@@ -21,7 +21,7 @@ namespace Trails
 	public class Trails : RocketPlugin<TrailsConfiguration>
 	{
 		public static Trails Instance;
-		public static Dictionary<CSteamID, ushort> trails;
+		public static Dictionary<ulong, List <ushort>> trails;
 		public Database database;
 
 		#region Translations
@@ -33,7 +33,8 @@ namespace Trails
 				{
 					{ "no_permission", "You don't have permission to set your trail to {0}" },
 					{ "set_trail", "Your trail has been set to {0}" },
-					{ "removed_trail", "Your trail has been removed" },
+					{ "removed_trail", "Removed {0} from your trails" },
+					{ "removed_all_trails", "Your trails has been removed" },
 					{ "trail_not_found", "{0} is not a valid trail, try /trails for a list of trails" },
 					{ "trails_list", "{0} trails found : {1}"},
 
@@ -52,7 +53,7 @@ namespace Trails
 		{
 			Instance = this;
 			database = new Database ();
-			trails = new Dictionary<CSteamID, ushort> ();
+			trails = new Dictionary<ulong, List <ushort>> ();
 			UnturnedPlayerEvents.OnPlayerUpdatePosition += PlayerMoved;
 
 			U.Events.OnPlayerConnected += playerConnected;
@@ -63,101 +64,104 @@ namespace Trails
 
 		private void playerConnected (UnturnedPlayer player)
 		{
-			var trail = database.getTrail (player);
-			if (trail != "false")
+			var loadedTrails = database.getTrails (player);
+			if (loadedTrails != null)
 			{
-				trails.Add (player.CSteamID, Convert.ToUInt16 (trail));
+				trails.Add ((ulong)player.CSteamID, loadedTrails);
 			}
 		}
 
 		private void playedDisconnected (UnturnedPlayer player)
 		{
-			if (trails.ContainsKey (player.CSteamID))
-				trails.Remove (player.CSteamID);
+			if (trails.ContainsKey ((ulong)player.CSteamID))
+				trails.Remove ((ulong)player.CSteamID);
 		}
 
 		private void PlayerMoved (UnturnedPlayer player, UnityEngine.Vector3 position)
 		{
-			if (!trails.ContainsKey (player.CSteamID))
+			if (!trails.ContainsKey ((ulong)player.CSteamID))
 				return;
-			var trail = Configuration.Instance.customTrails.Where (t => t.id == trails [player.CSteamID]).FirstOrDefault ();
-
-			string [] showOn = trail.type.Split (',');
-
-			foreach (var show in showOn)
+			foreach (var trail in trails [(ulong)player.CSteamID])
 			{
-				switch (show.Split ('.') [0].ToLower ())
-				{
-					case "always":
-						break;
-					case "grounded":
-						if (!player.Player.movement.isGrounded)
-							return;
-						break;
-					case "notgrounded":
-						if (player.Player.movement.isGrounded)
-							return;
-						break;
-					case "jump":
-						if (!player.Player.movement.jump)
-							return;
-						break;
-					case "bleeding":
-						if (!player.Bleeding)
-							return;
-						break;
-					case "brokenbones":
-						if (!player.Broken)
-							return;
-						break;
-					case "zombiefollowing":
-						if (!player.Player.life.isAggressor)
-							return;
-						break;
-					case "equipedgun":
-						if (player.Player.equipment.asset == null)
-							return;
-						ushort [] guns = show.Split ('.').Select (g => ushort.Parse (g)).ToArray ();
-						if (!guns.Contains (player.Player.equipment.asset.id))
-							return;
-						break;
-					case "inwater":
-						if (!player.Player.stance.isSubmerged)
-							return;
-						break;
-					case "running":
-						if (!player.Player.stance.sprint)
-							return;
-						break;
-					case "walking":
-						if (player.Player.stance.sprint || player.Player.stance.crouch || player.Player.stance.prone)
-							return;
-						break;
-					case "prone":
-						if (!player.Player.stance.prone)
-							return;
-						break;
-					case "crouch":
-						if (!player.Player.stance.crouch)
-							return;
-						break;
-					case "talking":
-						if (!player.Player.voice.isTalking)
-							return;
-						break;
-					case "invehicle":
-						if (!player.IsInVehicle)
-							return;
-						ushort [] vehicles = show.Split ('.').Select (v => ushort.Parse (v)).ToArray ();
-						if (!vehicles.Contains (player.CurrentVehicle.id))
-							return;
-						break;
-					default:
-						break;
-				}
-			}
+				var trailItem = Configuration.Instance.customTrails.Where (t => t.id == trail).FirstOrDefault ();
 
-			EffectManager.sendEffect (trails [player.CSteamID], 80, position);
+				string [] showOn = trailItem.type.Split (',');
+
+				foreach (var show in showOn)
+				{
+					switch (show.Split ('.') [0].ToLower ())
+					{
+						case "always":
+							break;
+						case "grounded":
+							if (!player.Player.movement.isGrounded)
+								return;
+							break;
+						case "notgrounded":
+							if (player.Player.movement.isGrounded)
+								return;
+							break;
+						case "jump":
+							if (!player.Player.movement.jump)
+								return;
+							break;
+						case "bleeding":
+							if (!player.Bleeding)
+								return;
+							break;
+						case "brokenbones":
+							if (!player.Broken)
+								return;
+							break;
+						case "zombiefollowing":
+							if (!player.Player.life.isAggressor)
+								return;
+							break;
+						case "equipedgun":
+							if (player.Player.equipment.asset == null)
+								return;
+							ushort [] guns = show.Split ('.').Select (g => ushort.Parse (g)).ToArray ();
+							if (!guns.Contains (player.Player.equipment.asset.id))
+								return;
+							break;
+						case "inwater":
+							if (!player.Player.stance.isSubmerged)
+								return;
+							break;
+						case "running":
+							if (!player.Player.stance.sprint)
+								return;
+							break;
+						case "walking":
+							if (player.Player.stance.sprint || player.Player.stance.crouch || player.Player.stance.prone)
+								return;
+							break;
+						case "prone":
+							if (!player.Player.stance.prone)
+								return;
+							break;
+						case "crouch":
+							if (!player.Player.stance.crouch)
+								return;
+							break;
+						case "talking":
+							if (!player.Player.voice.isTalking)
+								return;
+							break;
+						case "invehicle":
+							if (!player.IsInVehicle)
+								return;
+							ushort [] vehicles = show.Split ('.').Select (v => ushort.Parse (v)).ToArray ();
+							if (!vehicles.Contains (player.CurrentVehicle.id))
+								return;
+							break;
+						default:
+							break;
+					}
+				}
+
+				EffectManager.sendEffect (trail, 80, position);
+			}
 		}
 
 		protected override void Unload ()

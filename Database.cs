@@ -7,6 +7,7 @@ using Rocket.Unturned.Player;
 using SDG.Unturned;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Trails
 {
@@ -33,14 +34,14 @@ namespace Trails
 			}
 			return connection;
 		}
-		public void addToSQL (UnturnedPlayer player, ushort trail)
+		public void addToSQL (UnturnedPlayer player, List <ushort> trails)
 		{
 			if (TableLoaded)
 			{
 				MySqlConnection connection = createConnection ();
 				MySqlCommand command = connection.CreateCommand ();
 				command.Parameters.AddWithValue ("@SteamID", player.CSteamID);
-				command.Parameters.AddWithValue ("@Trail", trail);
+				command.Parameters.AddWithValue ("@Trail", String.Join (",", trails.Select (t => t.ToString ()).ToArray ()));
 				command.CommandText = "SELECT * FROM `"+ Trails.Instance.Configuration.Instance.tablename +"` WHERE SteamID=@SteamID;";
 				connection.Open ();
 				object result = command.ExecuteScalar ();
@@ -52,7 +53,7 @@ namespace Trails
 				connection.Close ();
 			}
 		}
-		public void remove (UnturnedPlayer player)
+		public void removeAll (UnturnedPlayer player)
 		{
 			if (TableLoaded)
 			{
@@ -65,7 +66,7 @@ namespace Trails
 				connection.Close ();
 			}
 		}
-		public string getTrail (UnturnedPlayer player)
+		public List <ushort> getTrails (UnturnedPlayer player)
 		{
 			if (TableLoaded)
 			{
@@ -77,9 +78,9 @@ namespace Trails
 				object result = command.ExecuteScalar ();
 				connection.Close ();
 				if (result != null)
-					return result.ToString ();
+					return result.ToString ().Split (',').Select (t => ushort.Parse (t)).ToList ();
 			}
-			return "false";
+			return null;
 		}
 		#region Check Schemas
 
@@ -98,7 +99,7 @@ namespace Trails
 				if (test == null)
 				{
 					Logger.Log ("Creating " + Trails.Instance.Configuration.Instance.tablename + " Table...");
-					command.CommandText = "CREATE TABLE `" + Trails.Instance.Configuration.Instance.tablename + "` (`id` int(11) NOT NULL AUTO_INCREMENT,`SteamID` VARCHAR(18) NOT NULL,`Trail` int(32) NOT NULL,PRIMARY KEY (`id`));";
+					command.CommandText = "CREATE TABLE `" + Trails.Instance.Configuration.Instance.tablename + "` (`id` int(11) NOT NULL AUTO_INCREMENT,`SteamID` VARCHAR(18) NOT NULL,`Trail` int(64) NOT NULL,PRIMARY KEY (`id`));";
 					command.ExecuteNonQuery ();
 					Logger.Log ("" + Trails.Instance.Configuration.Instance.tablename + " Table Successfully created...");
 				}
