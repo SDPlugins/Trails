@@ -78,8 +78,86 @@ namespace Trails
 
 		private void PlayerMoved (UnturnedPlayer player, UnityEngine.Vector3 position)
 		{
-			if (trails.ContainsKey (player.CSteamID))
-				EffectManager.sendEffect (trails [player.CSteamID], 80, position);
+			if (!trails.ContainsKey (player.CSteamID))
+				return;
+			var trail = Configuration.Instance.customTrails.Where (t => t.id == trails [player.CSteamID]).FirstOrDefault ();
+
+			string [] showOn = trail.type.Split (',');
+
+			foreach (var show in showOn)
+			{
+				switch (show.Split ('.') [0].ToLower ())
+				{
+					case "always":
+						break;
+					case "grounded":
+						if (!player.Player.movement.isGrounded)
+							return;
+						break;
+					case "notgrounded":
+						if (player.Player.movement.isGrounded)
+							return;
+						break;
+					case "jump":
+						if (!player.Player.movement.jump)
+							return;
+						break;
+					case "bleeding":
+						if (!player.Bleeding)
+							return;
+						break;
+					case "brokenbones":
+						if (!player.Broken)
+							return;
+						break;
+					case "zombiefollowing":
+						if (!player.Player.life.isAggressor)
+							return;
+						break;
+					case "equipedgun":
+						if (player.Player.equipment.asset == null)
+							return;
+						ushort [] guns = show.Split ('.').Select (g => ushort.Parse (g)).ToArray ();
+						if (!guns.Contains (player.Player.equipment.asset.id))
+							return;
+						break;
+					case "inwater":
+						if (!player.Player.stance.isSubmerged)
+							return;
+						break;
+					case "running":
+						if (!player.Player.stance.sprint)
+							return;
+						break;
+					case "walking":
+						if (player.Player.stance.sprint || player.Player.stance.crouch || player.Player.stance.prone)
+							return;
+						break;
+					case "prone":
+						if (!player.Player.stance.prone)
+							return;
+						break;
+					case "crouch":
+						if (!player.Player.stance.crouch)
+							return;
+						break;
+					case "talking":
+						if (!player.Player.voice.isTalking)
+							return;
+						break;
+					case "invehicle":
+						if (!player.IsInVehicle)
+							return;
+						ushort [] vehicles = show.Split ('.').Select (v => ushort.Parse (v)).ToArray ();
+						if (!vehicles.Contains (player.CurrentVehicle.id))
+							return;
+						break;
+					default:
+						break;
+				}
+			}
+
+			EffectManager.sendEffect (trails [player.CSteamID], 80, position);
 		}
 
 		protected override void Unload ()

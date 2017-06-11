@@ -41,43 +41,50 @@ namespace Trails
 				{
 					name = "electric",
 					id = 61,
-					permission = "trail.electric"
+					permission = "trail.electric",
+					type = "ALWAYS"
 				},
 				new customTrail ()
 				{
 					name = "fire",
 					id = 139,
-					permission = "trail.fire"
+					permission = "trail.fire",
+					type = "GROUNDED"
 				},
 				new customTrail ()
 				{
 					name = "water",
 					id = 129,
-					permission = "trail.water"
+					permission = "trail.water",
+					type = "NOTGROUNDED"
 				},
 				new customTrail ()
 				{
 					name = "red",
 					id = 124,
-					permission = "trail.red"
+					permission = "trail.red",
+					type = "INWATER,VEHICLE.140.106"
 				},
 				new customTrail ()
 				{
 					name = "orange",
 					id = 130,
-					permission= "trail.orange"
+					permission= "trail.orange",
+					type = "INWATER"
 				},
 				new customTrail ()
 				{
 					name = "purple",
 					id = 132,
-					permission = "trail.purple"
+					permission = "trail.purple",
+					type = "INVEHICLE.106.104"
 				},
 				new customTrail ()
 				{
 					name = "green",
 					id = 134,
-					permission = "trail.green"
+					permission = "trail.green",
+					type = "INVEHICLE.54.52"
 				}
 			};
 		}
@@ -91,6 +98,8 @@ namespace Trails
 		public ushort id;
 		[XmlElement ("Permission")]
 		public string permission;
+		[XmlElement ("Type")]
+		public string type;
 
 		public customTrail () { }
 	}
