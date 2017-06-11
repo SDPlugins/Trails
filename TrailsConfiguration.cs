@@ -22,6 +22,9 @@ namespace Trails
 		[XmlElement ("DatabasePort")]
 		public int port;
 
+		[XmlElement ("useSQL")]
+		public bool useSQL = true;
+
 		[XmlArray ("Trails")]
 		[XmlArrayItem ("Trail")]
 		public List<customTrail> customTrails = new List<customTrail> ();
@@ -34,6 +37,8 @@ namespace Trails
 			password = "password";
 			tablename = "trails";
 			port = 3306;
+
+			useSQL = true;
 
 			customTrails = new List<customTrail> ()
 			{

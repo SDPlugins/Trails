@@ -50,7 +50,8 @@ namespace Trails
 									else
 										Trails.trails.Add ((ulong)setPlayer.CSteamID, new List<ushort> () { trail.id });
 
-									Trails.Instance.database.addToSQL (setPlayer, Trails.trails [(ulong)setPlayer.CSteamID]);
+									if (Trails.Instance.Configuration.Instance.useSQL)
+										Trails.Instance.database.addToSQL (setPlayer, Trails.trails [(ulong)setPlayer.CSteamID]);
 									UnturnedChat.Say (setPlayer, Trails.Instance.Translate ("set_trail_by_admin", trail.name, player.DisplayName), Color.green);
 									UnturnedChat.Say (player, Trails.Instance.Translate ("set_trail_admin", setPlayer.DisplayName, trail.name), Color.green);
 								}
@@ -69,7 +70,8 @@ namespace Trails
 								else
 									Trails.trails.Add ((ulong)player.CSteamID, new List<ushort> () { trail.id });
 
-								Trails.Instance.database.addToSQL (player, Trails.trails [(ulong)player.CSteamID]);
+								if (Trails.Instance.Configuration.Instance.useSQL)
+									Trails.Instance.database.addToSQL (player, Trails.trails [(ulong)player.CSteamID]);
 								UnturnedChat.Say (player, Trails.Instance.Translate ("set_trail", trail.name), Color.green);
 							}
 							else
@@ -85,7 +87,8 @@ namespace Trails
 								if (Trails.trails.ContainsKey ((ulong)player.CSteamID))
 									Trails.trails.Remove ((ulong)player.CSteamID);
 
-								Trails.Instance.database.removeAll (player);
+								if (Trails.Instance.Configuration.Instance.useSQL)
+									Trails.Instance.database.removeAll (player);
 								UnturnedChat.Say (player, Trails.Instance.Translate ("removed_all_trails"), Color.green);
 							}
 							else
@@ -94,10 +97,13 @@ namespace Trails
 									if (Trails.trails [(ulong)player.CSteamID].Contains (trail.id))
 										Trails.trails.Remove (trail.id);
 
-								if (Trails.trails [(ulong)player.CSteamID].Count > 0)
-									Trails.Instance.database.addToSQL (player, Trails.trails [(ulong)player.CSteamID]);
-								else
-									Trails.Instance.database.removeAll (player);
+								if (Trails.Instance.Configuration.Instance.useSQL)
+								{
+									if (Trails.trails [(ulong)player.CSteamID].Count > 0)
+										Trails.Instance.database.addToSQL (player, Trails.trails [(ulong)player.CSteamID]);
+									else
+										Trails.Instance.database.removeAll (player);
+								}
 								UnturnedChat.Say (player, Trails.Instance.Translate ("removed_trail"), Color.green);
 							}
 						}
@@ -134,7 +140,8 @@ namespace Trails
 				if (Trails.trails.ContainsKey ((ulong)player.CSteamID))
 					Trails.trails.Remove ((ulong)player.CSteamID);
 
-				Trails.Instance.database.removeAll (player);
+				if (Trails.Instance.Configuration.Instance.useSQL)
+					Trails.Instance.database.removeAll (player);
 				UnturnedChat.Say (player, Trails.Instance.Translate ("removed_all_trails"), Color.green);
 			}
 		}

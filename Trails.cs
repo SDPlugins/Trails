@@ -52,18 +52,21 @@ namespace Trails
 		protected override void Load ()
 		{
 			Instance = this;
-			database = new Database ();
+			Configuration.Save ();
+			if (Configuration.Instance.useSQL)
+				database = new Database ();
 			trails = new Dictionary<ulong, List <ushort>> ();
 			UnturnedPlayerEvents.OnPlayerUpdatePosition += PlayerMoved;
 
 			U.Events.OnPlayerConnected += playerConnected;
 			U.Events.OnPlayerDisconnected += playedDisconnected;
 
-			Configuration.Save ();
 		}
 
 		private void playerConnected (UnturnedPlayer player)
 		{
+			if (!Configuration.Instance.useSQL)
+				return;
 			var loadedTrails = database.getTrails (player);
 			if (loadedTrails != null)
 			{
