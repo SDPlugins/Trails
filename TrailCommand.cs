@@ -11,45 +11,15 @@ namespace Trails
 {
 	public class TrailCommand : IRocketCommand
 	{
-		public AllowedCaller AllowedCaller
-		{
-			get
-			{
-				return AllowedCaller.Both;
-			}
-		}
+		public AllowedCaller AllowedCaller =>  AllowedCaller.Both;
 
-		public string Name
-		{
-			get
-			{
-				return "trail";
-			}
-		}
+		public string Name => "trail";
 
-		public List<string> Aliases
-		{
-			get
-			{
-				return new List<string> () { };
-			}
-		}
+		public List<string> Aliases => new List<string> () { };
 
-		public string Help
-		{
-			get
-			{
-				return "";
-			}
-		}
+		public string Help => "";
 
-		public string Syntax
-		{
-			get
-			{
-				return "";
-			}
-		}
+		public string Syntax => "";
 
 		public void Execute (IRocketPlayer caller, string [] command)
 		{
@@ -169,13 +139,6 @@ namespace Trails
 			}
 		}
 
-		public List<string> Permissions
-		{
-			get
-			{
-				return new List<string> () { "trail" };
-			}
-		}
-
+		public List<string> Permissions => new List<string> () { "trail" };
 	}
 }

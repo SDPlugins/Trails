@@ -89,7 +89,7 @@ namespace Trails
 
 				foreach (var show in showOn)
 				{
-					switch (show.Split ('.') [0].ToLower ())
+					switch (show.Split ('.') [0].Trim ().ToLower ())
 					{
 						case "always":
 							break;

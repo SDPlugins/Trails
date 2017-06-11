@@ -11,45 +11,15 @@ namespace Trails
 {
 	public class TrailsCommand : IRocketCommand
 	{
-		public AllowedCaller AllowedCaller
-		{
-			get
-			{
-				return AllowedCaller.Both;
-			}
-		}
+		public AllowedCaller AllowedCaller => AllowedCaller.Both;
 
-		public string Name
-		{
-			get
-			{
-				return "trails";
-			}
-		}
+		public string Name => "trails";
 
-		public List<string> Aliases
-		{
-			get
-			{
-				return new List<string> () { };
-			}
-		}
+		public List<string> Aliases => new List<string> () { };
 
-		public string Help
-		{
-			get
-			{
-				return "";
-			}
-		}
+		public string Help => "";
 
-		public string Syntax
-		{
-			get
-			{
-				return "";
-			}
-		}
+		public string Syntax => "";
 
 		public void Execute (IRocketPlayer caller, string [] command)
 		{
@@ -60,13 +30,6 @@ namespace Trails
 			UnturnedChat.Say (player, Trails.Instance.Translate ("trails_list", Trails.Instance.Configuration.Instance.customTrails.Count, trails), Color.green);
 		}
 
-		public List<string> Permissions
-		{
-			get
-			{
-				return new List<string> () { "trails" };
-			}
-		}
-
+		public List<string> Permissions => new List<string> () { "trails" };
 	}
 }
