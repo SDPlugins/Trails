@@ -99,7 +99,7 @@ namespace Trails
 				if (test == null)
 				{
 					Logger.Log ("Creating " + Trails.Instance.Configuration.Instance.tablename + " Table...");
-					command.CommandText = "CREATE TABLE `" + Trails.Instance.Configuration.Instance.tablename + "` (`id` int(11) NOT NULL AUTO_INCREMENT,`SteamID` VARCHAR(18) NOT NULL,`Trail` int(64) NOT NULL,PRIMARY KEY (`id`));";
+					command.CommandText = "CREATE TABLE `" + Trails.Instance.Configuration.Instance.tablename + "` (`id` int(11) NOT NULL AUTO_INCREMENT,`SteamID` VARCHAR(18) NOT NULL,`Trail` VARCHAR(3000) NOT NULL,PRIMARY KEY (`id`));";
 					command.ExecuteNonQuery ();
 					Logger.Log ("" + Trails.Instance.Configuration.Instance.tablename + " Table Successfully created...");
 				}
